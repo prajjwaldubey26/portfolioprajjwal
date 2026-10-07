@@ -2,26 +2,152 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Dark values live on :root so the first paint is dark with no flash.
+  next-themes adds `light` on <html> when that preference is saved.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --bg: #0a0a0f;
+  --fg: #f4f4f5;
+  --muted: #a1a1aa;
+  --card: rgba(255, 255, 255, 0.045);
+  --line: rgba(255, 255, 255, 0.12);
+  --accent: #ff9900;
+  --accent-text: #ff9900;
+  --ok: #6ee7b7;
+  --spot: rgba(255, 153, 0, 0.16);
+  --spot-2: rgba(56, 189, 248, 0.1);
+  --grad-1: #ff9900;
+  --grad-2: #38bdf8;
+  --grad-3: #c4b5fd;
+  --mx: 72%;
+  --my: 18%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html.light {
+  color-scheme: light;
+  --bg: #f4f5f8;
+  --fg: #0a0a0f;
+  --muted: #3f3f46;
+  --card: rgba(255, 255, 255, 0.72);
+  --line: rgba(10, 10, 15, 0.12);
+  --accent: #ff9900;
+  --accent-text: #9a3412;
+  --ok: #047857;
+  --spot: rgba(255, 153, 0, 0.2);
+  --spot-2: rgba(109, 40, 217, 0.1);
+  --grad-1: #c2410c;
+  --grad-2: #0369a1;
+  --grad-3: #6d28d9;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  overflow-x: clip;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--fg);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+::selection {
+  background: #ff9900;
+  color: #0a0a0f;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.bg-grid {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--fg) 18%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse at 50% 15%, #000 10%, transparent 72%);
+}
+
+.spotlight {
+  background:
+    radial-gradient(540px circle at var(--mx) var(--my), var(--spot), transparent 46%),
+    radial-gradient(760px circle at var(--mx) var(--my), var(--spot-2), transparent 54%);
+}
+
+.glass {
+  background: var(--card);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.glass-hover {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.glass-hover:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 20px 50px -24px color-mix(in srgb, var(--accent) 75%, transparent);
+}
+
+.gradient-text {
+  background-image: linear-gradient(115deg, var(--grad-1), var(--grad-2) 52%, var(--grad-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.15rem;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--accent);
+  transition: transform 0.2s ease;
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.nav-link-active::after {
+  display: none;
+}
+
+.cursor-glow {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cursor-glow {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .nav-link::after {
+    transition: none;
   }
 }
